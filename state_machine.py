@@ -1,6 +1,7 @@
 from pico2d import *
 
-
+def start_event(e):
+    return e[0]=='START'
 
 def space_down(e):
     return e[0]=='INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
@@ -20,6 +21,10 @@ def right_up(e):
 def left_up(e):
     return e[0]=='INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 
+def key_a_down(e):
+    return e[0]=='INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+def key_a_up(e):
+    return e[0]=='INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_a
 
 class StateMachine:
     def __init__(self,obj):
@@ -27,7 +32,7 @@ class StateMachine:
         self.event_q = [] # 상태 이벤트 저장 리스트
     def start(self, state):
         self.cur_state = state # 시작 상태를 받아서 그걸로 현재 상태를 정의
-        self.cur_state.enter(self.obj,('Start',0))
+        self.cur_state.enter(self.obj,('START',0))
         print(f'Entering state {self.cur_state}')
 
 
