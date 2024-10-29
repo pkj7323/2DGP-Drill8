@@ -1,10 +1,24 @@
 from pico2d import *
 
+
+
 def space_down(e):
     return e[0]=='INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
 def time_out(e):
     return e[0]=='TIME_OUT'
+
+def right_down(e):
+    return e[0]=='INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
+
+def left_down(e):
+    return e[0]=='INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+
+def right_up(e):
+    return e[0]=='INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
+
+def left_up(e):
+    return e[0]=='INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 
 
 class StateMachine:
@@ -13,6 +27,7 @@ class StateMachine:
         self.event_q = [] # 상태 이벤트 저장 리스트
     def start(self, state):
         self.cur_state = state # 시작 상태를 받아서 그걸로 현재 상태를 정의
+        self.cur_state.enter(self.obj,('Start',0))
         print(f'Entering state {self.cur_state}')
 
 
@@ -25,10 +40,10 @@ class StateMachine:
                                             #트렌지션 테이블을 확인했는데 table에 키가 없으면 오류 발생
                 if check_event(e): # 내가 원하는 상태에서
                     print(f'Exit from  {self.cur_state}')# 테이블을 잘 썻는가?
-                    self.cur_state.exit(self.obj)
+                    self.cur_state.exit(self.obj,e) # 이벤트를 알려줘야함
                     self.cur_state = next_state
                     print(f'Enter into {self.cur_state}')# 테이블을 잘 썻는가?
-                    self.cur_state.enter(self.obj)
+                    self.cur_state.enter(self.obj,e)
                     return # 제대로 이벤트에 따른 상태변환 완료
             #이 시점에 도달하는 것은 event에 따른 전환을 못함
             print(f'        Warning: {e} not handled at state {self.cur_state}')
